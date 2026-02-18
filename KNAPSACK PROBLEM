@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+// Structure for an item
+struct Item {
+    int profit;
+    int weight;
+    float ratio;   // profit/weight
+};
+
+// Function to swap two items
+void swap(struct Item *a, struct Item *b) {
+    struct Item temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Sort items in descending order of ratio (Bubble sort used for simplicity)
+void sortItems(struct Item arr[], int n) {
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = 0; j < n - i - 1; j++) {
+            if(arr[j].ratio < arr[j + 1].ratio) {
+                swap(&arr[j], &arr[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    float capacity, totalProfit = 0.0;
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+
+    struct Item arr[n];
+
+    printf("Enter profit and weight of each item:\n");
+    for(int i = 0; i < n; i++) {
+        printf("Item %d Profit: ", i + 1);
+        scanf("%d", &arr[i].profit);
+        printf("Item %d Weight: ", i + 1);
+        scanf("%d", &arr[i].weight);
+        arr[i].ratio = (float)arr[i].profit / arr[i].weight;
+    }
+
+    printf("Enter knapsack capacity: ");
+    scanf("%f", &capacity);
+
+    // Sort items by profit/weight ratio
+    sortItems(arr, n);
+
+    for(int i = 0; i < n; i++) {
+        if(capacity >= arr[i].weight) {
+            capacity -= arr[i].weight;
+            totalProfit += arr[i].profit;
+        } else {
+            totalProfit += arr[i].profit * (capacity / arr[i].weight);
+            break;
+        }
+    }
+
+    printf("Maximum Profit = %.2f\n", totalProfit);
+
+    return 0;
+}
